@@ -49,3 +49,8 @@ The Monte Carlo Tree Search (MCTS) algorithm primarily consists of the following
 3. After each action is taken, there are a stochastic process that can be modeled using multiple Monte Carlo simulations
 
 I used the Python implementation of the 2048 puzzle that is taken from https://github.com/weihanglo/py2048.
+
+# Observations
+1. Probably don't need that many search paths, especially at the beginning. It's kind of hard to lose the game at first.
+2. Need to adaptively adjust the number of search paths as the game progresses. I can afford to search a lot more in the later stages because each simulation doesn't run as long.
+3. It's kind of interesting to note that when a human plays the game, he probably approaches it more like a markov model than this algorithm does, only seeing the next couple of steps. 
