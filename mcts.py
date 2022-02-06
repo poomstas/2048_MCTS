@@ -7,13 +7,13 @@ from GameState import GameState
 # %%
 class Node:
     """Node object to represent a game state."""
-    def __init__(self, move=None, parent=None, state=None):
-        self.move = move
-        self.parent_node = parent
-        self.child_nodes = []
-        self.visits = 0
-        self.score = 0
-        self.untried_moves = state.get_moves()
+    def __init__(self, move=None, parent=None, state=None): # Initialization scheme
+        self.move = move                                    # The move that got us to this node - "None" for the root node
+        self.parent_node = parent                           # "None" for the root node
+        self.child_nodes = []                               # No child nodes when initializing. Use add_child to add child nodes
+        self.visits = 0                                     # Refer to Wikipedia figure
+        self.score = 0                                      # Refer to Wikipedia figure
+        self.untried_moves = state.get_moves()              # Future child nodes
 
     def __repr__(self):
         """Representation of the current state as string."""
@@ -62,9 +62,9 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
     
     root_node = Node(state=root_state)
 
-    for _ in range(n_search_path):
-        node = root_node
-        state = root_state.clone()
+    for _ in range(n_search_path):          # See what's happened after one iteration is done
+        node = root_node                    # Start from the root node every iteration
+        state = root_state.clone()          # Experiment with the clone of the root_state, not the actual one.
 
         # Select
         while node.untried_moves==[] and node.child_nodes!=[]: # Node is fully expanded and non-terminal
@@ -72,20 +72,21 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
             state.do_move(node.move)
 
         # Expand
-        if node.untried_moves!=[]:
+        if node.untried_moves!=[]:                  # If we can expand (i.e. state/node is non-terminal)
             move = random.choice(node.untried_moves)
             state.do_move(move)
-            node = node.add_child(move, state)
+            node = node.add_child(move, state)      # Add child and descend tree
 
         # Rollout
-        search_depth_count = 0
+        search_depth_count = 0                      # Reset counter
+        # Repeat while the state is non-terminal and the n_search_depth limit isn't yet reached:
         while state.game_state()=='not over' and search_depth_count<=n_search_depth:
             state.do_move(random.choice(state.get_moves()))
             search_depth_count += 1
 
         # Backpropagate
-        while node is not None:
-            node.update(state.get_result())
+        while node is not None: # Backprop from the expanded node and work back to the root node.
+            node.update(state.get_result()) # State is terminal. Update node with the result
             node = node.parent_node
     
     # Print info about the tree
