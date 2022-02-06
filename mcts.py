@@ -1,7 +1,7 @@
-from random import choice
+# %%
 from math import sqrt, log
-from pprint import pprint
 
+# %%
 class Node:
     """Node object to represent a game state."""
 
@@ -53,13 +53,29 @@ class Node:
         return s
 
 
-def UCT(rootState, nSearchPath, nSearchDepth, explorationConstant, verbose=False):
-    """
-    Implements the UCT search for nSearchPath iteration starting from the root state.
-    Return the best move to be executed at the root state.
-    Assumes 2 alternating players (plaer 1 starts), with game results in the range [0.0, 1.0]
-    """
+# %%
+def UCT(rootstate, nSearchPath, nSearchDepth, explorationConstant, verbose=False):
+    """ Implements the UCT search for nSearchPath iteration starting from the root state.
+        Return the best move to be executed at the root state. """
+    
+    rootnode = Node(state=rootstate)
+
+    for _ in range(nSearchPath):
+        node = rootnode
+        state = rootstate.Clone()
+
+        # Select
+        while node.untried_moves == [] and node.child_nodes != []: # Node is fully expanded and non-terminal
+            node = node.select_child_UCT(C=explorationConstant)
+            state.DoMove(node.move) # Need to write this part
+
+        # Expand
+
+        # Rollout
+
+        # Backprop
 
 
+# %%
 if __name__ == "__main__":
     node = Node(state="0000/0000/0000/0020", move="up", parent=None)
