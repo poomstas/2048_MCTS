@@ -17,6 +17,11 @@ class Node:
         """Representation of the current state as string."""
         return "[M:{}  S/V:{}  V:{}  Untried:{}]".format(self.move, self.score, self.visits, self.untried_moves)
 
+    def select_child_UCT(self, C=sqrt(2)):
+        """Select a child based on the UCT1 node. C is the bias parameter."""
+        s = sorted(self.child_nodes, key=lambda c: c.score / c.visits + C * sqrt(log(self.visits) / c.visits))
+        return s[-1]
+
     def add_child(self, move, state):
         """Remove move from untried_moves, add a new child node for this move. Return the added child node."""
         n = Node(move=move, parent=self, state=state)
@@ -28,15 +33,6 @@ class Node:
         """Add one visit to the node and count the score."""
         self.visits += 1
         self.score += result
-
-    def select_child_UCT(self, C=sqrt(2)):
-        """Select a child based on the UCT1 node. C is the bias parameter."""
-        s = sorted(self.child_nodes, key=lambda c: c.score / c.visits + C * sqrt(log(self.visits) / c.visits))
-        return s[-1]
-
-    def get_moves(self):
-        """Gets possible moves given the current state."""
-        pass
 
     def tree_to_string(self, indent):
         s = self.indent_string(indent) + str(self)
