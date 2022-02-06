@@ -1,6 +1,8 @@
 # %%
 import random
 from math import sqrt, log
+from utils_2048 import add_two, reverse, transpose, cover_up, merge
+from GameState import GameState
 
 # %%
 class Node:
@@ -63,7 +65,7 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
 
     for _ in range(n_search_path):
         node = root_node
-        state = root_state.Clone()
+        state = root_state.clone()
 
         # Select
         while node.untried_moves==[] and node.child_nodes!=[]: # Node is fully expanded and non-terminal
@@ -72,6 +74,7 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
 
         # Expand
         if node.untried_moves!=[]:
+            import pdb; pdb.set_trace()
             move = random.choice(node.untried_moves)
             state.do_move(move)
             node = node.add_child(move, state)
@@ -93,6 +96,34 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
     # Return the move that was the most visited
     return sorted(root_node.child_nodes, key=lambda c: c.visits)[-1].move
 
+# %%
+def play_game():
+    mat_init = add_two(add_two([[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]))
+    # mat_init = [[8, 4, 2, 8], [2, 16, 8, 4], [256, 32, 4, 2], [4, 2, 4, 2]]    # Death matrix for debugging
+    # mat_init = [[2,4,32,2],[4,16,512,4],[4,8,128,16],[4,16,8,2]]               # Death matrix for debugging
+    
+    state = GameState(mat_init) # Initialize 2048 grid
+    loop_count = 0
+    game_over = False # True if add_two can't add anywhere after moving
+
+    while state.game_state()=='not over' and game_over==False: # Run if the game is not over
+        loop_count += 1
+
+        print("Move count: " + str(loop_count))
+        print("Points    : " + str(state.point_count))
+        print(str(state))
+
+        move = UCT(root_state=state, n_search_path=50, n_search_depth=5, exploration_const=100, verbose=True)
+
+        print("Best Move: " + str(move) + "\n")
+        game_over = state.DoMove(move)
+
+    print("======================= Game Over =======================")
+    print(str(state))
+    print(state.game_state())
+
+if __name__ == "__main__":
+    play_game()
 
 # %%
 if __name__ == "__main__":
