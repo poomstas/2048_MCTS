@@ -68,7 +68,7 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
         # Select
         while node.untried_moves==[] and node.child_nodes!=[]: # Node is fully expanded and non-terminal
             node = node.select_child_UCT(C=exploration_const)
-            state.do_move(node.move) # Need to write this part
+            state.do_move(node.move)
 
         # Expand
         if node.untried_moves!=[]:
@@ -77,8 +77,21 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
             node = node.add_child(move, state)
 
         # Rollout
+        search_depth_count = 0
+        while state.game_state()=='not over' and search_depth_count<=n_search_depth:
+            state.do_move(random.choice(state.get_moves()))
+            search_depth_count += 1
 
-        # Backprop
+        # Backpropagate
+        while node is not None:
+            node.update(state.get_result())
+            node = node.parent_node
+    
+    # Print info about the tree
+    print(root_node.tree_to_string(0)) if verbose else print(root_node.children_to_string())
+
+    # Return the move that was the most visited
+    return sorted(root_node.child_nodes, key=lambda c: c.visits)[-1].move
 
 
 # %%

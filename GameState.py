@@ -5,9 +5,10 @@ from utils_2048 import add_two, reverse, transpose, cover_up, merge
 class GameState:
     """ Simple version of the 2048 board with moves, processing, and point system available.
         Use this class to pair with MCTS algorithm. """
+
     def __init__(self, mat):
         self.matrix = mat
-        self.pointCount = 0
+        self.point_count = 0
 
     def __str__(self):
         s = ""
@@ -51,8 +52,8 @@ class GameState:
         done = done or temp[1]
         game = cover_up(game)[0]
         game = transpose(game)
-        addPoints = temp[2]
-        return game, done, addPoints
+        add_points = temp[2]
+        return game, done, add_points
 
     def down(self):
         game = self.matrix
@@ -63,8 +64,8 @@ class GameState:
         done = done or temp[1]
         game = cover_up(game)[0]
         game = transpose(reverse(game))
-        addPoints = temp[2]
-        return game, done, addPoints
+        add_points = temp[2]
+        return game, done, add_points
 
     def left(self):
         game = self.matrix
@@ -73,78 +74,77 @@ class GameState:
         game = temp[0]
         done = done or temp[1]
         game = cover_up(game)[0]
-        addPoints = temp[2]
-        return game, done, addPoints
+        add_points = temp[2]
+        return game, done, add_points
 
     def right(self):
         game = self.matrix
         game = reverse(game)
-        game,done = cover_up(game)
+        game, done = cover_up(game)
         temp = merge(game)
         game = temp[0]
         done = done or temp[1]
         game = cover_up(game)[0]
         game = reverse(game)
-        addPoints = temp[2]
-        return game, done, addPoints
+        add_points = temp[2]
+        return game, done, add_points
 
     def clone(self):
         st = GameState(self.matrix)
-        st.pointCount = self.pointCount
+        st.point_count = self.point_count
         return st
     
     def do_move(self, move):
         """ Move input should be one of the following: "up", "down", "left", "right"
             Make sure when this function is called, the move is a possible move. """
-        moveFuncs = {
+        move_funcs = {
             'up':       self.up(),
             'down':     self.down(),
             'left':     self.left(),
             'right':    self.right()
         }
 
-        self.matrix, _, addPoints = moveFuncs[move]
-        self.pointCount += addPoints # Update Points
+        self.matrix, _, add_points = move_funcs[move]
+        self.point_count += add_points # Update Points
         
         # Check if there any zeros in the grid.
-        zeroExists = False
+        zero_exists = False
         for i in range(4):
             for j in range(4):
                 if self.matrix[i][j] == 0:
-                    zeroExists = True
+                    zero_exists = True
                     break
         
-        if zeroExists:
+        if zero_exists:
             self.matrix = add_two(self.matrix) # Add 2 or 4 in the matrix
-            gameOver = self.game_state() != 'not over'
-            return gameOver 
+            game_over = self.game_state() != 'not over'
+            return game_over 
         else:
-            gameOver = True
-            return gameOver 
+            game_over = True
+            return game_over 
         
     def get_moves(self):
         """ Get all possible moves from this state. """
-        _, doneUp, _     = self.up()
-        _, doneDown, _   = self.down()
-        _, doneLeft, _   = self.left()
-        _, doneRight, _  = self.right()
+        _, done_up, _     = self.up()
+        _, done_down, _   = self.down()
+        _, done_left, _   = self.left()
+        _, done_right, _  = self.right()
 
-        movePossible = []
-        if doneUp:
-            movePossible.append("up")
-        if doneDown:
-            movePossible.append("down")
-        if doneLeft:
-            movePossible.append("left")
-        if doneRight:
-            movePossible.append("right")
+        move_possible = []
+        if done_up:
+            move_possible.append("up")
+        if done_down:
+            move_possible.append("down")
+        if done_left:
+            move_possible.append("left")
+        if done_right:
+            move_possible.append("right")
         
-        return movePossible
+        return move_possible
 
     def get_result(self):
-        """ Get the score of the given state.
-        """
-        return self.pointCount
+        """ Get the score of the given state."""
+        return self.point_count
 
 # %%
 if __name__ == "__main__":
