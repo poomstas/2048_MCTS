@@ -7,14 +7,13 @@ from GameState import GameState
 # %%
 class Node:
     """Node object to represent a game state."""
-
     def __init__(self, move=None, parent=None, state=None):
         self.move = move
         self.parent_node = parent
         self.child_nodes = []
         self.visits = 0
         self.score = 0
-        self.untried_moves = None  # Need to write some kind of get_moves method. 
+        self.untried_moves = state.get_moves()
 
     def __repr__(self):
         """Representation of the current state as string."""
@@ -28,7 +27,7 @@ class Node:
     def add_child(self, move, state):
         """Remove move from untried_moves, add a new child node for this move. Return the added child node."""
         n = Node(move=move, parent=self, state=state)
-        self.untried_move.remove(move)
+        self.untried_moves.remove(move)
         self.child_nodes.append(n)
         return n
 
@@ -74,7 +73,6 @@ def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=Fa
 
         # Expand
         if node.untried_moves!=[]:
-            import pdb; pdb.set_trace()
             move = random.choice(node.untried_moves)
             state.do_move(move)
             node = node.add_child(move, state)
@@ -116,7 +114,7 @@ def play_game():
         move = UCT(root_state=state, n_search_path=50, n_search_depth=5, exploration_const=100, verbose=True)
 
         print("Best Move: " + str(move) + "\n")
-        game_over = state.DoMove(move)
+        game_over = state.do_move(move)
 
     print("======================= Game Over =======================")
     print(str(state))
@@ -124,7 +122,3 @@ def play_game():
 
 if __name__ == "__main__":
     play_game()
-
-# %%
-if __name__ == "__main__":
-    node = Node(state="0000/0000/0000/0020", move="up", parent=None)
