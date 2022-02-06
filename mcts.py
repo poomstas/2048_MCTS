@@ -1,4 +1,5 @@
 # %%
+import random
 from math import sqrt, log
 
 # %%
@@ -54,22 +55,26 @@ class Node:
 
 
 # %%
-def UCT(rootstate, nSearchPath, nSearchDepth, explorationConstant, verbose=False):
+def UCT(root_state, n_search_path, n_search_depth, exploration_const, verbose=False):
     """ Implements the UCT search for nSearchPath iteration starting from the root state.
         Return the best move to be executed at the root state. """
     
-    rootnode = Node(state=rootstate)
+    root_node = Node(state=root_state)
 
-    for _ in range(nSearchPath):
-        node = rootnode
-        state = rootstate.Clone()
+    for _ in range(n_search_path):
+        node = root_node
+        state = root_state.Clone()
 
         # Select
-        while node.untried_moves == [] and node.child_nodes != []: # Node is fully expanded and non-terminal
-            node = node.select_child_UCT(C=explorationConstant)
-            state.DoMove(node.move) # Need to write this part
+        while node.untried_moves==[] and node.child_nodes!=[]: # Node is fully expanded and non-terminal
+            node = node.select_child_UCT(C=exploration_const)
+            state.do_move(node.move) # Need to write this part
 
         # Expand
+        if node.untried_moves!=[]:
+            move = random.choice(node.untried_moves)
+            state.do_move(move)
+            node = node.add_child(move, state)
 
         # Rollout
 
