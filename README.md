@@ -72,7 +72,13 @@ I have determined that the
 </p>
 
 # Results
-`multiple_run_sim.py` file simulates multiple runs to determine the rate of success 
+Running an instance of `MCTS.py` script will initialize a MCTS algorithm and attempt to solve a game of 2048. Below is an example of a successful run where the algorithm was able to reach 2048 before terminating.
+
+<p align="center">
+  <img src="/readme_img/Z_WonGame.png" width="450" title="Won Game">
+</p>
+
+`multiple_runs_sim.py` file simulates multiple runs to determine the rate of success 
 
 
 # Observations (Needs Editing)
