@@ -27,7 +27,7 @@ Each state carries with it an estimate of value that is calculated using Monte C
 </p>
 
 ### Selection
-Selection process points the algorithm to which action is likely to be worth exploring. It takes the current state of the tree and selects decisions down that tree to a future state at a fixed depth. The relative value of different nodes are determined using the UCB equation (explained in the next section), which systematically incorporates both the observed average returns and the uncertainty associated with the estimated average.
+Selection process points the algorithm to which action is likely to be worth exploring. It takes the current state of the tree and selects decisions down that tree to a future state at a fixed depth. The relative value of different nodes are determined using the UCB equation (explained below), which systematically incorporates both the observed average returns and the uncertainty associated with the estimated average.
 
 #### Upper Confidence Bound (UCB)
 The upper confidence bound (UCB) is used in the MCTS’s selection stage to traverse the tree. UCB is used to balance the selection process between exploration and exploitation. Exploration and exploitation refers to the challenge posed to an agent to choose between acquiring new knowledge about the system and returning to an option that is expected to have large returns, based on current knowledge. The UCB algorithm proposes that the agent pull the arm that maximizes the following:
