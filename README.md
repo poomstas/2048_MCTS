@@ -33,7 +33,7 @@ Selection process points the algorithm to which action is likely to be worth exp
 The upper confidence bound (UCB) is used in the MCTS’s selection stage to traverse the tree. UCB is used to balance the selection process between exploration and exploitation. Exploration and exploitation refers to the challenge posed to an agent to choose between acquiring new knowledge about the system and returning to an option that is expected to have large returns, based on current knowledge. The UCB algorithm proposes that the agent pull the arm that maximizes the following:
 
 <p align="center">
-  <img src="/readme_img/C_UCB.png" width="450" title="UCB Equation">
+  <img src="/readme_img/C_UcbEqn.png" width="450" title="UCB Equation">
 </p>
 
 The above equation is intuitive. The `ωi/ni` term is the current estimate of returns associated with a decision. The remaining `c sqrt(ln(Ni)/ni)` term represent the upper bound of the confidence interval associated with the estimate, which is updated as the number of observations accumulate over time. The second term decreases as more observations are sampled to represent increased confidence in the expected returns.
