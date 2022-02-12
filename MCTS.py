@@ -121,5 +121,6 @@ def play_game():
     print(str(state))
     print(state.game_state())
 
+# %%
 if __name__ == "__main__":
     play_game()

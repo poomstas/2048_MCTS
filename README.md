@@ -15,11 +15,16 @@ Monte Carlo Tree Search (MCTS) is a probabilistic tree search algorithm that use
 
 As the name suggests, MCTS involves a tree-like structure; it is used to represent different states and available actions. An example of a tree structure of a tic-tac-toe game is in the figure below. In the diagram, the nodes represent different states that the tic-tac-toe board could take (nodes are more generally represented as a simple circle than a board). At the top of the tree, we start with the root node, with which represent the state of the board the game begins. Given this state, the first player has nine different actions he can take. Four of the nine available actions are visualized in the figure. In the diagram, the available actions are represented using edges, which are the lines that connect the states. The states of the board resulting from these actions are represented using the child nodes. Four of the nine child nodes are shown in the figure in the second row as an example. Once MCTS carries out an action, then the corresponding child node becomes the new root node, and its sibling nodes would be discarded.
 
-[Figure] Monte-Carlo Tree Search Applied to Tic-Tac-Toe
+<p align="center">
+  <img src="/readme_img/A_TicTacToe.png" width="450" title="Monte-Carlo Tree Search Applied to Tic-Tac-Toe">
+</p>
+
 
 Each state carries with it an estimate of value that is calculated using Monte Carlo simulations. These values are then used to compare the quality of one action over another. Overall, MCTS consists of four stages: selection, expansion, simulation, and backpropagation. The four processes are repeated at every iteration, one of which is shown as an example in the figure below. The two numbers in the nodes of the example tree represent the number of simulated wins and the number of simulations (“visits”) that particular state has observed. The following sections will provide an overview of the mechanics of each stage using the example tree provided.
 
-[Figure] The Four Stages in Monte-Carlo Tree Search Algorithm
+<p align="center">
+  <img src="/readme_img/B_MCTS.png" width="450" title="The Four Stages in Monte-Carlo Tree Search Algorithm">
+</p>
 
 ### Selection
 Selection process points the algorithm to which action is likely to be worth exploring. It takes the current state of the tree and selects decisions down that tree to a future state at a fixed depth. The relative value of different nodes are determined using the UCB equation (explained in the next section), which systematically incorporates both the observed average returns and the uncertainty associated with the estimated average.
