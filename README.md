@@ -4,6 +4,11 @@
 Create an agent that solves the 2048 puzzle. In this work, I employ the Monte-Carlo Tree Search (MCTS) algorithm to achieve this objective.
 
 ## The 2048 Game
+
+<p align="center">
+  <img src="/readme_img/A_2048.png" width="450" title="2048 Game">
+</p>
+
 2048 is a simple board game. As shown below, the board has 4x4 squares, some of which are occupied by number blocks. The player can press one of the four (up, down, left, right) arrows to shift the blocks in the specified direction. Adjacent blocks with the same number will add together, combining into one block with a value of the two blocks' values added together. If the adjacent blocks do not have the same number, then they will not combine.
 
 The game is considered successfully solved if the largest number on the grid reaches 2048, hence the name. The game terminates unsuccessfully if, after an action is taken and a new block is added, there are no empty blocks left and there are no valid moves available. 
@@ -62,14 +67,14 @@ Through the above four stages, we can take decisions to a fixed point in the tre
 
 I used the Python implementation of the 2048 puzzle that is taken from [REF].
 
-# Hyperparameter Optimization
+# MCTS Hyperparameters
 The main hyperparameters of the MCTS algorithm are: `nSearchPath`, `nSearchDepth`, and `explorationConst`, specifying the number of search paths, the depth of search, and the exploration constant. These hyperparameters together determine the tradeoff between exploration and exploitation. 
 
-I have determined that the 
+For this work, I have used the values below, and verified that the combination of values gives adequate results. These values can be modified to further optimize for the performance (i.e. the rate of success).
 
-<p align="center">
-  <img src="/readme_img/C_HyperparamOptim.png" width="450" title="Hyperparameter Optimization">
-</p>
+nSearchPath	|	nSearchDepth	|	Exploration Const.	|
+---	|	---	|	---	|
+50	|	5	|	100	|
 
 # Results
 Running an instance of `MCTS.py` script will initialize a MCTS algorithm and attempt to solve a game of 2048. Below is an example of a successful run where the algorithm was able to reach 2048 before terminating.
