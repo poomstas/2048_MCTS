@@ -19,10 +19,11 @@ class Node:
         """Representation of the current state as string."""
         return "[M:{}  S/V:{}  V:{}  Untried:{}]".format(self.move, self.score, self.visits, self.untried_moves)
 
-    def select_child_UCT(self, C=sqrt(2)):
-        """Select a child based on the UCT1 node. C is the bias parameter."""
-        s = sorted(self.child_nodes, key=lambda c: c.score / c.visits + C * sqrt(log(self.visits) / c.visits))
-        return s[-1]
+    def UCTSelectChild(self, C = sqrt(2)):
+        """ Use the UCB-1 formula to select a child node. C in the equation below is a bias parameter
+            to adjust for the algorithm's tradeoff between exploration and exploitation. """
+        s = sorted(self.childNodes, key = lambda c: c.score/c.visits + C * sqrt(log(self.visits)/c.visits)) 
+        return s[-1] # Return the child node with the largest value
 
     def add_child(self, move, state):
         """Remove move from untried_moves, add a new child node for this move. Return the added child node."""

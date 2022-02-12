@@ -28,11 +28,18 @@ As the name suggests, MCTS involves a tree-like structure; it is used to represe
 Each state carries with it an estimate of value that is calculated using Monte Carlo simulations. These values are then used to compare the quality of one action over another. Overall, MCTS consists of four stages: selection, expansion, simulation, and backpropagation. The four processes are repeated at every iteration, one of which is shown as an example in the figure below. The two numbers in the nodes of the example tree represent the number of simulated wins and the number of simulations (“visits”) that particular state has observed. The following sections will provide an overview of the mechanics of each stage using the example tree provided.
 
 <p align="center">
-  <img src="/readme_img/B_MCTS.png" width="450" title="The Four Stages in Monte-Carlo Tree Search Algorithm">
+  <img src="/readme_img/B_MCTS.png" width="700" title="The Four Stages in Monte-Carlo Tree Search Algorithm">
 </p>
 
 ### Selection
 Selection process points the algorithm to which action is likely to be worth exploring. It takes the current state of the tree and selects decisions down that tree to a future state at a fixed depth. The relative value of different nodes are determined using the UCB equation (explained below), which systematically incorporates both the observed average returns and the uncertainty associated with the estimated average.
+
+``` python
+        # Select
+        while node.untried_moves==[] and node.child_nodes!=[]: # Node is fully expanded and non-terminal
+            node = node.select_child_UCT(C=exploration_const)
+            state.do_move(node.move)
+```
 
 #### Upper Confidence Bound (UCB)
 The upper confidence bound (UCB) is used in the MCTS’s selection stage to traverse the tree. UCB is used to balance the selection process between exploration and exploitation. Exploration and exploitation refers to the challenge posed to an agent to choose between acquiring new knowledge about the system and returning to an option that is expected to have large returns, based on current knowledge. The UCB algorithm proposes that the agent pull the arm that maximizes the following:
@@ -45,19 +52,49 @@ The above equation is intuitive. The `ωi/ni` term is the current estimate of re
 
 The parameter `c` in the above equation controls for the extent to which uncertain options are favored. If `c` is set to zero, then the UCB algorithm would recommend that the agent pulls the arm solely based on the expected returns without considering the uncertainties associated with the estimations (i.e. exploitation). If `c` is set to a larger value, then the relative contribution of the expected value is reduced in the selection process, shifting the significance more towards the uncertainties associated with estimates of expected returns. In other words, a UCB algorithm with a larger `c` tends to favor options that are not previously explored (i.e. exploration). An implementation of the selection process using the UCB equation will show that the algorithm will attempt to quickly identify the best alternative, and as it proceeds, it will keep searching for other good options while validating the optimality of the current “best”.
 
+``` python
+    def UCTSelectChild(self, C = sqrt(2)):
+        """ Use the UCB-1 formula to select a child node. C in the equation below is a bias parameter
+            to adjust for the algorithm's tradeoff between exploration and exploitation. """
+        s = sorted(self.childNodes, key = lambda c: c.score/c.visits + C * sqrt(log(self.visits)/c.visits)) 
+        return s[-1] # Return the child node with the largest value
+```
+
 
 
 ### Node Expansion
 In this step, a new node is added to the tree as a child node of the node selected in the previous step. Only a single node is newly introduced to the tree at every iteration. In the figure, the expanded node has the numbers 0/0 because it has neither observed any wins nor simulations.
 
+``` python
+        # Expand
+        if node.untried_moves!=[]:                  # If we can expand (i.e. state/node is non-terminal)
+            move = random.choice(node.untried_moves)
+            state.do_move(move)
+            node = node.add_child(move, state)      # Add child and descend tree
+```
 ### Simulation / Rollout
 The simulation step consists of randomly choosing moves until the algorithm reaches the terminal state or a specified threshold. Once the terminal conditions are met, then the algorithm calculates and returns a result of how well it performed as a score (in this work, the value is calculated from the NPV). This score is then passed to the backpropagation phase. This stage relies on a forward model that provides us with the outcomes of an action in any state.
+
+``` python
+        # Rollout
+        search_depth_count = 0                      # Reset counter
+        # Repeat while the state is non-terminal and the n_search_depth limit isn't yet reached:
+        while state.game_state()=='not over' and search_depth_count<=n_search_depth:
+            state.do_move(random.choice(state.get_moves()))
+            search_depth_count += 1
+```
 
 ### Backpropagation
 Once the value of the newly introduced node is determined in the simulation phase, the tree structure is updated. In the backpropagation step, the algorithm updates the perceived value of a given state, not just to the state it executed in the simulation but also every state that led to that state in the tree. The collection of the updated nodes can be observed by tracing the arrow that leads back up to the original parent node in the figure above. This updating scheme allows the algorithm to search for early actions that may lead to opportunities that that may be observed in the future. The scores are updated until the root node (starting point) is reached.
 
 Through the above four stages, we can take decisions to a fixed point in the tree, simulate their outcome, propagate back the perceived value of it. This process is repeated multiple times to balance out the optimal set of actions. Once the simulation count limit is reached, the algorithm chooses the optimal action leading to the state with the highest value.
 
+``` python
+        # Backpropagate
+        while node is not None: # Backprop from the expanded node and work back to the root node.
+            node.update(state.get_result()) # State is terminal. Update node with the result
+            node = node.parent_node
+```
 
 ## Why is MCTS an appropriate algorithm for solving this game?
 1. Action space is discrete (up, down, left, right), and the number of available actions at each stage is small (<= 4).
