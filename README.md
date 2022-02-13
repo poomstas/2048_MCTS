@@ -1,4 +1,4 @@
-# MCTS to Solve the 2048 Puzzle 
+# Applying Monte Carlo Tree Search (MCTS) to Solve the 2048 Puzzle 
 
 ## Objective / Problem Statement
 Create an agent that solves the 2048 puzzle. In this work, I employ the Monte-Carlo Tree Search (MCTS) algorithm to achieve this objective.
@@ -136,4 +136,8 @@ Running an instance of `MCTS.py` script will initialize a MCTS algorithm and att
 
 
 # References
-https://www.nature.com/articles/nature16961
+Cameron B. Browne, Edward Powley, Daniel Whitehouse, Simon M. Lucas, Peter I. Cowling, Philipp Rohlfshagen, Stephen Tavener, Diego Perez, Spyridon Samothrakis, Simon Colton (2012). A Survey of Monte Carlo Tree Search Methods. *IEEE TRANSACTIONS ON COMPUTATIONAL INTELLIGENCE AND AI IN GAMES*, *4*(1), 1–43. https://doi.org/10.1109/TCIAIG.2012.2186810
+
+David Silver, Aja Huang, Chris J. Maddison, Arthur Guez, Laurent Sifre, George van den Driessche,
+Julian Schrittwieser, Ioannis Antonoglou, Veda Panneershelvam, Marc Lanctot, Sander Dieleman, Dominik Grewe, John Nham, Nal Kalchbrenner, Ilya Sutskever, Timothy Lillicrap, Madeleine Leach, Koray Kavukcuoglu,
+Thore Graepel,  Demis Hassabis (2016). Mastering the game of Go with deep neural networks and tree search. *Nature*, *529*(7585), 484–489. https://doi.org/10.1038/nature16961
