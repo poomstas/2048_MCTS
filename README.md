@@ -124,8 +124,6 @@ Running an instance of `MCTS.py` script will initialize a MCTS algorithm and att
   <img src="/readme_img/Z_WonGame.png" width="450" title="Won Game">
 </p>
 
-`multiple_runs_sim.py` file simulates multiple runs to determine the rate of success given a set of hyperparameter configuration. 
-
 
 # Observations
 - I could probably do just as well with fewer search paths and depths at the beginning. When a new game begins and there are many empty cells in the grid, there is almost always no action that would either make the player lose the game, or put him at a significant disadvantage in the subsequent states. It is only when the majority of the grid cells are filled up that choosing an optimal action starts to become more critical. Adjusting the algorithm for this observation would make it more computationally efficient. It may even be possible to simply sample randomly from the available four (or fewer) actions until a certain fraction of grid cells are occupied, after which the algorithm would compute MCTS with adjusted search hyperparameter values.
